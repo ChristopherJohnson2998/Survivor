@@ -1,11 +1,18 @@
 import './App.css'
+import Game from './game/Game';
 import Lobby from './lobby/Lobby';
+import { Routes, Route } from 'react-router-dom';
+
 
 function App() {
   return (
     <div>
-      <Lobby/>
+      <Routes>
+        <Route path="/" element={<Lobby />} />
+        <Route path="/game" element={<Game />} />
+      </Routes>
     </div>
+
   );
 }
 
