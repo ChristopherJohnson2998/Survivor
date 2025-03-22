@@ -19,9 +19,24 @@ io.on("connection", (socket) => {
 
   // Handle joining the lobby
   socket.on("joinLobby", (playerName) => {
-    players[socket.id] = { id: socket.id, name: playerName };
+    players[socket.id] = { id: socket.id, name: playerName, ready: false };
     io.emit("updateLobby", Object.values(players)); // Send updated player list
   });
+
+  // Handle ready players
+  socket.on("playerReady", () => {
+    if (players[socket.id]) {
+      players[socket.id].ready = true;
+      io.emit("updateLobby", Object.values(players));
+      checkStartGame();
+    }
+  });
+
+  const checkStartGame = () => {
+    if (Object.values(players).length > 0 && Object.values(players).every(player => player.ready)) {
+      io.emit("startGame");
+    }
+  };
 
   // Handle player disconnecting
   socket.on("disconnect", () => {
